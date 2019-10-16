@@ -1,204 +1,70 @@
 #include <iostream>
 #include <bits/stdc++.h>
-
+#include <string.h>
 using namespace std;
-
 string a,b;
-string tmpa, tmpb;
-
-void mo()
+string c,d,temp;
+int k=0;
+void motep()
 {
     freopen("SFBNC.INP","r",stdin);
     freopen("SFBNC.OUT","w",stdout);
     return;
 }
-void dong()
+void dongtep()
 {
     fclose(stdin);
     fclose(stdout);
     return;
 }
-bool isSmaller(string x, string y)
+string add(string x, string y)
 {
-    while(x.length() < y.length())
+    int i;
+    string c;
+    long sum, carry, a, b;
+    carry = 0;
+    c = "";
+    while (x.length()<y.length()) x = "0" + x;
+    while (y.length()<x.length()) y = "0" + y;
+    for (i=x.length()-1;i>=0;i--)
     {
-        x = "0" + x;
+        a = (int)(x[i]-48);
+        b = (int)(y[i]-48);
+        sum = a + b + carry;
+        carry = sum / 10;
+        c = (char)(sum%10+48)+c;
     }
-    while(y.length() < x.length())
-    {
-        y = "0" + y;
-    }
-
-    if(x<y)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    if (carry>0) c = "1"+c;
+    return c;
 }
-bool isSmalleroreqal(string x, string y)
+int cmp (string x, string y)
 {
-    while(x.length() < y.length())
-    {
-        x = "0" + x;
-    }
-    while(y.length() < x.length())
-    {
-        y = "0" + y;
-    }
-
-    if(x<=y)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    while((long long)x.length()<(long long)y.length()) x = "0"+x;
+    while((long long)y.length()<(long long)x.length()) y = "0"+y;
+    if (x==y) return 0;
+    if (x>y) return 1;
+    return -1;
 }
-bool isGreateroreqal(string x, string y)
-{
-    while(x.length() < y.length())
-    {
-        x = "0" + x;
-    }
-    while(y.length() < x.length())
-    {
-        y = "0" + y;
-    }
-
-    if(x>=y)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-string sum(string str1, string str2)
-{
-    if (str1.length() > str2.length())
-        swap(str1, str2);
-    string str = "";
-
-    int n1 = str1.length(), n2 = str2.length();
-
-    reverse(str1.begin(), str1.end());
-    reverse(str2.begin(), str2.end());
-
-    int carry = 0;
-    for (int i=0; i<n1; i++)
-    {
-        int sum = ((str1[i]-'0')+(str2[i]-'0')+carry);
-        str.push_back(sum%10 + '0');
-
-        carry = sum/10;
-    }
-
-    for (int i=n1; i<n2; i++)
-    {
-        int sum = ((str2[i]-'0')+carry);
-        str.push_back(sum%10 + '0');
-        carry = sum/10;
-    }
-
-    if (carry)
-        str.push_back(carry+'0');
-
-    reverse(str.begin(), str.end());
-
-    return str;
-}
-string diff(string str1, string str2)
-{
-    if (isSmaller(str1, str2))
-        swap(str1, str2);
-    string str = "";
-
-    int n1 = str1.length(), n2 = str2.length();
-
-    reverse(str1.begin(), str1.end());
-    reverse(str2.begin(), str2.end());
-
-    int carry = 0;
-
-    for (int i=0; i<n2; i++)
-    {
-        int sub = ((str1[i]-'0')-(str2[i]-'0')-carry);
-
-        if (sub < 0)
-        {
-            sub = sub + 10;
-            carry = 1;
-        }
-        else
-            carry = 0;
-
-        str.push_back(sub + '0');
-    }
-
-    for (int i=n2; i<n1; i++)
-    {
-        int sub = ((str1[i]-'0') - carry);
-
-        if (sub < 0)
-        {
-            sub = sub + 10;
-            carry = 1;
-        }
-        else
-            carry = 0;
-
-        str.push_back(sub + '0');
-    }
-    reverse(str.begin(), str.end());
-
-    string ans = "";
-    for(int i = 0; i < (int)str.length(); i++)
-    {
-        if(str[i]!='0')
-        {
-            ans+=str[i];
-        }
-    }
-    return ans;
-}
-
 int main()
 {
-    mo();
-    cin>>a>>b;
-    if(a=="1" && b=="1")
+    motep();
+    cin >> a >> b;
+    c = "1";
+    d = "1";
+    while(cmp(d,a)==-1)
     {
-        cout<<1;
-        return 0;
+        temp = d;
+        d = add(c,d);
+        c = temp;
     }
-    else
+    while (cmp(d,b)==-1)
     {
-        string tmp1 = "1";
-        string tmp2 = "1";
-
-        long ans = 0;
-
-        while(isSmaller(tmp2,a))
-        {
-            string tmp = tmp2;
-            tmp2 = sum(tmp1,tmp2);
-            tmp1 = tmp;
-        }
-
-        while(isGreateroreqal(tmp2,a)&&isSmalleroreqal(tmp2,b))
-        {
-            string tmp = tmp2;
-            tmp2 = sum(tmp1,tmp2);
-            tmp1 = tmp;
-            ans++;
-        }
-        cout<<ans;
+        temp = d ;
+        d = add(c,d);
+        c = temp;
+        k++;
     }
-    dong();
+    cout << k+1;
+    dongtep();
     return 0;
 }
